@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmc.homework.BookMapper">
+	
+    
+    <insert id="addABook" parameterType="com.zmc.homework.Book">
+        INSERT INTO BOOKS VALUES(#{id},#{bookName},#{author},#{publishDate},#{price})
+    </insert>
+    
+    <!-- -->
+    <select id="findBookByName" parameterType="string" resultType="com.zmc.homework.Book">
+        SELECT * FROM BOOKS WHERE BOOKNAME=#{bookName}
+    </select>
+    
+    <select id="findBookById" parameterType="int" resultType="com.zmc.homework.Book">
+        SELECT * FROM BOOKS WHERE ID=#{id}
+    </select>
+    
+    <select id="findAllBooks" resultType="com.zmc.homework.Book">
+        SELECT * FROM BOOKS
+    </select>
+    
+    <select id="findAllBooksName" resultType="string">
+        SELECT BOOKNAME FROM BOOKS
+    </select>
+    
+    <select id="findCountOfBook" resultType="int">
+        SELECT COUNT(ID) FROM BOOKS
+    </select>
+    
+    <update id="updateBook" parameterType="com.zmc.homework.Book">
+        UPDATE BOOKS SET
+        BOOKNAME=#{bookName},
+        AUTHOR=#{author},
+        PUBLISHDATE=#{publishDate},
+        PRICE=#{price}
+        WHERE ID=#{id}
+    </update>
+    
+    <delete id="removeBook" parameterType="int">
+        DELETE BOOKS WHERE ID=#{id}
+    </delete>
+    
+    <select id="findBookNameAndAuthor" resultType="map">
+        SELECT BOOKNAME,AUTHOR FROM BOOKS
+    </select>
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmc.many2many.Many2ManyMapper">
+	<!-- 映射一个基本的Student查询结果 -->
+	<resultMap id="StudentResult" type="Student2">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="gender" column="gender" />
+		<result property="major" column="major" />
+		<result property="grade" column="grade" />
+	</resultMap>
+	<!-- 继承上面那个基本的映射,再扩展出级联查询 -->
+	<resultMap id="StudentResultWithCourses" type="Student2"
+		extends="StudentResult">
+		<collection property="courses" resultMap="CourseResult"></collection>
+	</resultMap>
+	<!-- 这里特别要是的是column="cid" 这是和select语句中的 c.id as cid对应的 一定一定一定要对应起来 -->
+	<resultMap id="CourseResult" type="Course2">
+		<id property="id" column="cid" />
+		<result property="courseCode" column="course_code" />
+		<result property="courseName" column="course_name" />
+		<collection property="students" resultMap="StudentResult" />
+	</resultMap>
+	<insert id="insertStudent" parameterType="Student2">
+		<!-- 自增 -->
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select
+			my_seq.nextval from dual
+		</selectKey>
+		insert into
+		student(id,name,gender,major,grade)
+		values
+		(#{id},#{name},#{gender},#{major},#{grade})
+	</insert>
+
+	<insert id="insertCourse" parameterType="Course">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select
+			my_seq.nextval from dual
+		</selectKey>
+		insert into
+		course(id,course_code,course_name)
+		values
+		(#{id},#{courseCode},#{courseName})
+	</insert>
+
+	<select id="getStudentById" parameterType="int" resultType="Student2">
+		select id,name,gender,major,grade
+		from student
+		where id=#{id}
+	</select>
+
+	<select id="getCourseById" parameterType="int" resultType="Course2">
+		select id,course_code as courseCode,course_name as courseName
+		from
+		course
+		where id=#{id}
+	</select>
+
+	<!-- param1代表方法中第一个参数 以此类推 -->
+	<insert id="studentSelectCourse">
+		insert into
+		student_course(id,student_id,course_id)
+		values
+		(my_seq.nextval,#{param1.id},#{param2.id})
+	</insert>
+
+	<!-- 如果有特殊符号的话 需要用 <![CDATA[ 特殊符号 ]]> 例如 < & 等等 -->
+	<select id="getStudentByIdOnCondition" parameterType="int"
+		resultType="Student2">
+		select *
+		from student
+		where id <![CDATA[ < ]]>
+		#{id}
+	</select>
+
+
+	<!-- 注意:查询语句的中的c.id as cid这个地方,避免名字相同出现查询结果不正确的情况 同时在id="CourseResult"的resultMap中也有与这里对应的设置要特别特别注意 -->
+	<select id="getStudentByIdWithCourses" parameterType="int"
+		resultMap="StudentResultWithCourses">
+		select s.id,s.name,s.gender,s.major,s.grade,c.id as
+		cid,c.course_code,c.course_name,sc.id,sc.student_id,sc.course_id
+		from student s,course c,student_course sc
+		where
+		s.id=#{id}
+		and
+		s.id=sc.student_id
+		and
+		sc.course_id=c.id
+	</select>
+</mapper>

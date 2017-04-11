@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmc.onetomany.One2ManyMapper">
+	<resultMap type="Address" id="AddressResult">
+		<id property="addrId" column="addr_id" />
+		<result property="city" column="city" />
+		<result property="province" column="province" />
+		<result property="zip" column="zip" />
+		<result property="country" column="country" />
+	</resultMap>
+	<resultMap type="Course" id="CourseResult">
+		<id column="course_id" property="courseId" />
+		<result column="name" property="name" />
+		<result column="description" property="description" />
+		<result column="start_date" property="startDate" />
+		<result column="end_date" property="endDate" />
+	</resultMap>
+	<resultMap type="Tutor" id="TutorResult">
+		<id column="tutor_id" property="tutorId" />
+		<result column="name" property="name" />
+		<result column="email" property="email" />
+		<result column="phone" property="phone" />
+		<!-- <association property="address" resultMap="AddressResult" /> -->
+		<association property="address" column="adds_id" select="findAddressByTutor" />
+		<!-- <collection property="courses" resultMap="CourseResult" /> -->
+		<collection property="courses" column="tutor_id" select="findCoursesByTutor" />
+	</resultMap>
+	<select id="findTutorById" parameterType="int" resultMap="TutorResult">
+		<!-- select t.tutor_id, t.name, t.email,t.phone, c.course_id, c.name, description,
+		start_date, end_date,addr_id,city,province,country
+		from tutors t left outer join address a on t.adds_id=a.addr_id
+		left outer join courses c on t.tutor_id=c.tutor_id
+		where t.tutor_id=#{tutorid} -->
+		select * from tutors where tutor_id=#{tutorid}
+	</select>
+	<select id="findCoursesByTutor" parameterType="int" resultMap="CourseResult">
+	    select course_id,name,description,start_date,end_date from courses where tutor_id=#{tutor_id}
+	</select>
+	<select id="findAddressByTutor" parameterType="int" resultMap="AddressResult">
+	    select * from address where addr_id=#{adds_id}
+	</select>
+</mapper>

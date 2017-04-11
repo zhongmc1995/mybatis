@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<properties resource="jdbc.properties">
+
+	</properties>
+	<typeAliases>
+		<!-- <typeAlias alias="Student" type="com.zmc.pojo.Student" /> -->
+		<!-- 配置包名 Mybatis会自动在此包名下搜索实体类 -->
+		<package name="com.zmc.pojo" />
+		<package name="com.zmc.onetomany" />
+		<package name="com.zmc.many2many" />
+	</typeAliases>
+	<typeHandlers>
+		<typeHandler handler="com.zmc.handler.PhoneNumberHandler" />
+	</typeHandlers>
+	<environments default="development">
+		<environment id="development">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<!-- <property name="driver" value="com.mysql.jdbc.Driver" /> <property 
+					name="url" value="jdbc:mysql://localhost:3306/test" /> -->
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="${username}" />
+				<property name="password" value="${password}" />
+			</dataSource>
+		</environment>
+		<!-- 配置测试环境 -->
+		<!-- <environment id="test">
+			<transactionManager type="JDBC" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" /> <property 
+					name="url" value="jdbc:mysql://localhost:3306/test" />
+				<property name="driver" value="${driver}" />
+				<property name="url" value="${url}" />
+				<property name="username" value="test" />
+				<property name="password" value="test" />
+			</dataSource>
+		</environment> -->
+	</environments>
+	<mappers>
+		<mapper resource="com/zmc/pojo/StudentMapper.xml" />
+		<mapper resource="com/zmc/homework/BookMapper.xml" />
+		<package name="com.zmc.onetomany"/>
+		<package name="com.zmc.many2many"/>
+	</mappers>
+
+</configuration>  

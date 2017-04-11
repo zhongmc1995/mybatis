@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zmc.pojo.StudentMapper">
+	<!-- <resultMap type="Student" id="StudentResult">
+		<id property="id" column="stud_id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="dob" column="dob" />
+		<result property="phoneNumber" column="phone" />
+	</resultMap>
+	<resultMap type="Student" id="StudentWithAddResult" extends="StudentResult">
+	    <result property="address.addrId" column="addr_id" />
+	    <result property="address.country" column="country" />
+	    <result property="address.province" column="province" />
+	    <result property="address.city" column="city" />
+	</resultMap> -->
+	<!-- ======================= -->
+	<!-- <resultMap type="Student" id="StudentResult">
+		<id property="id" column="stud_id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="dob" column="dob" />
+		<result property="phoneNumber" column="phone" />
+	</resultMap>
+	<resultMap type="Address" id="AddressResult">
+	    <result property="addrId" column="addr_id" />
+	    <result property="country" column="country" />
+	    <result property="province" column="province" />
+	    <result property="city" column="city" />
+	</resultMap>
+	<resultMap type="Student" id="StudentWithAddResult">
+		<id property="id" column="stud_id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="dob" column="dob" />
+		<result property="phoneNumber" column="phone" />
+		<association property="address" resultMap="AddressResult" />
+	</resultMap> -->
+	<!-- ======================== -->
+	<!-- <resultMap type="Student" id="StudentResult">
+		<id property="id" column="stud_id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="dob" column="dob" />
+		<result property="phoneNumber" column="phone" />
+	</resultMap>
+	
+	<resultMap type="Student" id="StudentWithAddResult">
+		<id property="id" column="stud_id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="dob" column="dob" />
+		<result property="phoneNumber" column="phone" />
+		<association property="address" javaType="Address">
+	         <result property="addrId" column="addr_id" />
+		    <result property="country" column="country" />
+		    <result property="province" column="province" />
+		    <result property="city" column="city" />
+	    </association>
+	</resultMap>  -->
+	<!-- ==================== -->
+	<resultMap type="Student" id="StudentResult">
+		<id property="id" column="stud_id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="dob" column="dob" />
+		<result property="phoneNumber" column="phone" />
+	</resultMap>
+	<resultMap type="Address" id="AddressResult">
+	    <result property="addrId" column="addr_id" />
+	    <result property="country" column="country" />
+	    <result property="province" column="province" />
+	    <result property="city" column="city" />
+	</resultMap>
+	<resultMap type="Student" id="StudentWithAddResult">
+		<id property="id" column="stud_id" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="dob" column="dob" />
+		<result property="phoneNumber" column="phone" />
+		<association property="address" column="addr_id" select="findAddressById"></association>
+	</resultMap> 
+	<select id="findAddressById" parameterType="int" resultMap="AddressResult">
+	    select addr_id,country,province,city from address where addr_id=#{id}
+	</select>
+	<select id="findAllStudents" resultMap="StudentResult">
+		SELECT * FROM STUDENTS
+	</select>
+	<select id="findStudentInfoById" resultMap="StudentWithAddResult" parameterType="int">
+	    SELECT STUD_ID , NAME, EMAIL,DOB,phone ,A.ADDR_ID,COUNTRY,PROVINCE,CITY
+		FROM STUDENTS S,ADDRESS A WHERE STUD_ID=#{Id} AND S.ADDR_ID=A.ADDR_ID
+	</select>
+	
+	<select id="findStudentById" parameterType="int" resultType="Student">
+		SELECT STUD_ID AS ID, NAME, EMAIL,DOB,phone as phoneNumber
+		FROM STUDENTS WHERE STUD_ID=#{Id}
+	</select>
+	<insert id="insertStudent" parameterType="Student">
+	    <!-- oracle中主键自增 仅限于oracle -->
+	    <selectKey keyProperty="id" resultType="int" order="BEFORE">
+	        select my_seq.nextval from dual
+	    </selectKey>
+		INSERT INTO STUDENTS(STUD_ID,NAME,EMAIL,DOB,PHONE)
+		VALUES(#{id },#{name},#{email},#{dob},#{phoneNumber})
+	</insert>
+</mapper> 
