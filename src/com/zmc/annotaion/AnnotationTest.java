@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 
+import com.zmc.onetomany.Tutor;
 import com.zmc.pojo.Address;
 import com.zmc.pojo.Person;
 import com.zmc.util.MyBatisSqlSessionFactory;
@@ -57,5 +58,14 @@ public class AnnotationTest {
 		for (Address address : addresses) {
 			System.out.println(address);
 		}
+	}
+	
+	@Test
+	public void one2ManyTest(){
+		SqlSession session = MyBatisSqlSessionFactory.openSession(true);
+		One2ManyMapper mapper = session.getMapper(One2ManyMapper.class);
+		Tutor tutor = mapper.findTutorByTutorId(1);
+		System.out.println(tutor);
+		
 	}
 }

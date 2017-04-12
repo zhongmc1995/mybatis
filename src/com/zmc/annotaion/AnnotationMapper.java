@@ -101,5 +101,5 @@ public interface AnnotationMapper {
 		@Result(id=true,column="city",property="city")
 	})*/
 	@ResultMap("com.zmc.annotaion.AnnotationMapper.AddressResultMap")
-	List<Address> findAllAddrssById(Integer id);
+	Address findAllAddrssById(Integer id);
 }
