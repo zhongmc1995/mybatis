@@ -46,6 +46,8 @@
 		<mapper resource="com/zmc/homework/BookMapper.xml" />
 		<package name="com.zmc.onetomany"/>
 		<package name="com.zmc.many2many"/>
+		<package name="com.zmc.annotaion"/>
+		
 	</mappers>
 
 </configuration>  
